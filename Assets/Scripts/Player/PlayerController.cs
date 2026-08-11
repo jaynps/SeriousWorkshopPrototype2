@@ -1,4 +1,5 @@
 
+
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -9,10 +10,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     [SerializeField]
     public float moveSpeed = 5f;
-
+    [SerializeField]
     private float rotationSpeed  = 5f;
 
-    private Vector3 movement;
+    private Vector3 movement = Vector3.zero;
 
     void Awake()
     {
@@ -36,7 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = inputActions.Player.Move.ReadValue<Vector2>();
 
-        Debug.Log("The current input are x: "+ moveInput.x + " y: " + moveInput.y);
+        //Debug.Log("The current input are x: "+ moveInput.x + " y: " + moveInput.y);
 
         movement = new Vector3(moveInput.x, 0f, moveInput.y);
 
@@ -54,10 +55,21 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector3(moveInput.x * moveSpeed, rb.linearVelocity.y, moveInput.y * moveSpeed);
+        if(movement.magnitude > 0.1f)
+        {
+            rb.linearVelocity = new Vector3(moveInput.x * moveSpeed, rb.linearVelocity.y, moveInput.y * moveSpeed);
+            Quaternion targetRotation = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        }
+    }
 
-         Quaternion targetRotation = Quaternion.LookRotation(movement);
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Collision with " + collision.gameObject.name);
+    }
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entered a trigger zone " + other.gameObject.name);
     }
 }
