@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     private InputSystem_Actions inputActions;
     //private CharacterController controller;
+
+    //Movement Action
     private Rigidbody rb;
     private Vector2 moveInput;
     [SerializeField]
@@ -15,6 +17,9 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 movement = Vector3.zero;
 
+    //Interaction Actions Variables
+    [SerializeField]
+    private InteractionZone interactionZone;
     void Awake()
     {
         inputActions = new InputSystem_Actions();
@@ -41,6 +46,13 @@ public class PlayerController : MonoBehaviour
 
         movement = new Vector3(moveInput.x, 0f, moveInput.y);
 
+        if(inputActions.Player.Interact.WasPressedThisFrame())
+        {
+            //call the interact function
+            interactionZone.Interact();
+
+        }
+
       /*  if(movement.magnitude > 0.1f)
         {
             //transform.Translate(movement * movespeed * Time.deltaTime);
@@ -65,11 +77,11 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision with " + collision.gameObject.name);
+        //Debug.Log("Collision with " + collision.gameObject.name);
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entered a trigger zone " + other.gameObject.name);
+        //Debug.Log("Entered a trigger zone " + other.gameObject.name);
     }
 }
