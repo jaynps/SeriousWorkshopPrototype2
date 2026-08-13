@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SetGameState(GameState.Playing);
-        requiredWaste = 2;
+        requiredWaste = 5;
     }
 
     public void AddWaste()
