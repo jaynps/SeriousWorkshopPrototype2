@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
+        if(GameManager.Instance.GetGameState()!= GameState.Playing)
+            return;
         moveInput = inputActions.Player.Move.ReadValue<Vector2>();
 
         //Debug.Log("The current input are x: "+ moveInput.x + " y: " + moveInput.y);
