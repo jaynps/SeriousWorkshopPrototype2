@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
 
     //Movement Action
     private Rigidbody rb;
+
+    private Animator animator;
     private Vector2 moveInput;
     [SerializeField]
     public float moveSpeed = 5f;
@@ -25,6 +27,8 @@ public class PlayerController : MonoBehaviour
         inputActions = new InputSystem_Actions();
         //controller = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
+
+        animator = GetComponent<Animator>();
     }
 
     void OnEnable()
@@ -47,6 +51,15 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("The current input are x: "+ moveInput.x + " y: " + moveInput.y);
 
         movement = new Vector3(moveInput.x, 0f, moveInput.y);
+
+        if(movement.magnitude> 0.1f)
+        {
+            animator.SetBool("IsMoving",true);
+        }
+        else
+        {
+            animator.SetBool("IsMoving",false);
+        }
 
         if(inputActions.Player.Interact.WasPressedThisFrame())
         {
@@ -73,7 +86,10 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = new Vector3(moveInput.x * moveSpeed, rb.linearVelocity.y, moveInput.y * moveSpeed);
             Quaternion targetRotation = Quaternion.LookRotation(movement);
+
+            rb.angularVelocity = Vector3.zero;
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+
         }
     }
 
